@@ -1,0 +1,6 @@
+github.com/DavidHuie/gomigrate v0.0.0-20190826182718-4adc4b3de142 h1:pfeJevnIXt4KJShhkTp8uRU0evDkRaFkAdmaNmzHMIQ=
+github.com/DavidHuie/gomigrate v0.0.0-20190826182718-4adc4b3de142/go.mod h1:F3GZLX+VN44AjFiyKD8++nq8sVE0Sw3bOhhQ3mUffnM=
+github.com/go-chi/chi/v5 v5.0.7 h1:rDTPXLDHGATaeHvVlLcR4Qe0zftYethFucbjVQ1PxU8=
+github.com/go-chi/chi/v5 v5.0.7/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=
+github.com/lib/pq v1.10.6 h1:jbk+ZieJ0D7EVGJYpL9QTz7/YW6UHbmdnZWYyK5cdBs=
+github.com/lib/pq v1.10.6/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
