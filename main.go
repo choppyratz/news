@@ -19,7 +19,7 @@ func main() {
 	}
 	log.Printf("Connection: %v", conn)
 
-	conn.AutoMigrate(&models.Data{})
+	conn.AutoMigrate(&models.News{})
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
