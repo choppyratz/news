@@ -1,32 +1,32 @@
 version: "3"
 services:
+  news:
+    container_name: "test_api"
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "9993:9993"
+    depends_on:
+      - mysql
+    volumes:
+      - .:/app/
 #  news:
 #    build:
-#      context: .
 #      dockerfile: ./Dockerfile
-#    image: news_app
-#    platform: linux/amd64
+#      context: .
 #    depends_on:
 #      - mysql
 #    ports:
 #      - "9993:9993"
-
-#  news:
-#    build:
-#      dockerfile: ./Dockerfile
-#      context: .
-#    depends_on:
-#      - mysql
-#    ports:
-#      - "9993:9993"
-#    entrypoint: /news
-
-
-
   mysql:
     image: mysql:5.7
     restart: always
-#    environment:
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "secret"
+      MYSQL_DATABASE: "test"
+      MYSQL_USER: "tester"
+      MYSQL_PASSWORD: "secret"
 #      MYSQL_DATABASE: 'db'
 #      MYSQL_USER: 'user'
 #      MYSQL_PASSWORD: 'password'

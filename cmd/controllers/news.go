@@ -2,9 +2,8 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
 	"net/http"
+	"news/pkg/apiNews"
 	"news/pkg/db"
 	"news/pkg/models"
 	"strconv"
@@ -16,31 +15,42 @@ func News(w http.ResponseWriter, r *http.Request) {
 	limit := r.FormValue("limit")
 	l, err := strconv.Atoi(limit)
 
-	data, err := db.FetchData(l, categories, language)
 	if err != nil {
-		fmt.Print(models.NewErrorResponse("FetchData failed", err))
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "Couldn't transform string to int"})
 		return
 	}
 
-	list, err := db.InsertData(data, l, categories, language)
+	data, err := apiNews.FetchNews(l, categories, language)
 	if err != nil {
+		//models.Error(w,"aaa") ???
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "FetchNews failed"})
 		return
 	}
-
-	for index, _ := range list {
-		if index < len(list)-1 {
-			nextRow := list[index+1]
-			log.Printf("INDEX: %v", nextRow)
+	var similarNews *models.InternalNews
+	for _, val := range data.Data {
+		similarNews, err = apiNews.FetchSimilarNews(val.UUID)
+		if err != nil {
+			return
 		}
 	}
 
-	json, err := json.Marshal(list)
+	list, err := db.InsertData(data, similarNews)
 	if err != nil {
-		fmt.Print(models.NewErrorResponse("JSON Marshal failed", err))
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "InsertData failed"})
+		return
+	}
+
+	j, err := json.Marshal(list)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "JSON Marshal failed"})
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	//w.Write([]byte(fmt.Sprintf("news:%s", json)))
-	w.Write(json)
+	//w.Write([]byte(fmt.Sprintf("apiNews:%s", json)))
+	w.Write(j)
 }

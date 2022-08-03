@@ -4,12 +4,12 @@ RUN mkdir -p /app
 
 WORKDIR /app
 
-RUN go mod download
-
 COPY . /app
 
-RUN go build -o news main.go
+RUN go mod download
 
+
+RUN go build -o news main.go
 
 EXPOSE 9993
 
