@@ -12,8 +12,17 @@ import (
 func News(w http.ResponseWriter, r *http.Request) {
 	categories := r.FormValue("categories")
 	language := r.FormValue("language")
+	if language != "en" {
+
+	}
 	limit := r.FormValue("limit")
+
 	l, err := strconv.Atoi(limit)
+	if l < 1 && l > 10 {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "Limit error"})
+		return
+	}
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -21,22 +30,30 @@ func News(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data, err := apiNews.FetchNews(l, categories, language)
+	news, err := apiNews.FetchNews(l, categories, language)
 	if err != nil {
 		//models.Error(w,"aaa") ???
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "FetchNews failed"})
 		return
 	}
+
 	var similarNews *models.InternalNews
-	for _, val := range data.Data {
+	for _, val := range news.Data {
 		similarNews, err = apiNews.FetchSimilarNews(val.UUID)
 		if err != nil {
 			return
 		}
 	}
 
-	list, err := db.InsertData(data, similarNews)
+	//convert, err := apiNews.NewData(news, similarNews)
+	//if err != nil {
+	//	w.WriteHeader(http.StatusInternalServerError)
+	//	json.NewEncoder(w).Encode(models.ErrorResponse{Message: "InsertData failed"})
+	//	return
+	//}
+
+	list, err := db.InsertData(news, similarNews)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "InsertData failed"})
@@ -53,4 +70,5 @@ func News(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	//w.Write([]byte(fmt.Sprintf("apiNews:%s", json)))
 	w.Write(j)
+
 }

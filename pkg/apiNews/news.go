@@ -59,6 +59,15 @@ func FetchSimilarNews(uuid string) (*models.InternalNews, error) {
 		return nil, models.NewErrorResponse("Unmarshal failed: %v", err)
 
 	}
-
 	return &userStat, nil
 }
+
+//func NewData(news *models.InternalNews, similaryNews []*models.InternalNews) (*models.Data, error) {
+//	var newsSimilar *models.InternalNews
+//	for _, val := range news.Data {
+//		datas, err := FetchSimilarNews(val.UUID)
+//		if err != nil {
+//			return
+//		}
+//	}
+//}

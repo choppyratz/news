@@ -3,12 +3,12 @@ package models
 import "time"
 
 type Data struct {
-	Uuid        string `json:"uuid"`
-	Headline    string `json:"headline"`
-	Description string `json:"description"`
-	Keywords    string `json:"keywords"`
-	Snippet     string `json:"snippet"`
-	Url         string `json:"url"`
+	Uuid        string `json:"uuid,omitempty"`
+	Headline    string `json:"headline,omitempty"`
+	Description string `json:"description,omitempty"`
+	Keywords    string `json:"keywords,omitempty"`
+	Snippet     string `json:"snippet,omitempty"`
+	Url         string `json:"url,omitempty"`
 	SimilarNews News
 }
 

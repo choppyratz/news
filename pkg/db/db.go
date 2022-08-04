@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -33,7 +32,6 @@ func InsertData(userStat *models.InternalNews, similarNews *models.InternalNews)
 	list := []*models.Data{}
 
 	for _, val := range similarNews.Data {
-		fmt.Println(val.UUID)
 
 		for _, value := range userStat.Data {
 

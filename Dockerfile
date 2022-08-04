@@ -13,4 +13,4 @@ RUN go build -o news main.go
 
 EXPOSE 9993
 
-ENTRYPOINT [ "news" ]
+ENTRYPOINT [ "/news" ]
