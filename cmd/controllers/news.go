@@ -46,14 +46,14 @@ func News(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	//convert, err := apiNews.NewData(news, similarNews)
-	//if err != nil {
-	//	w.WriteHeader(http.StatusInternalServerError)
-	//	json.NewEncoder(w).Encode(models.ErrorResponse{Message: "InsertData failed"})
-	//	return
-	//}
+	convertData, err := apiNews.NewData(news, similarNews)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "InsertData failed"})
+		return
+	}
 
-	list, err := db.InsertData(news, similarNews)
+	list, err := db.InsertData(convertData)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "InsertData failed"})

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"news/pkg/models"
 )
@@ -62,12 +63,36 @@ func FetchSimilarNews(uuid string) (*models.InternalNews, error) {
 	return &userStat, nil
 }
 
-//func NewData(news *models.InternalNews, similaryNews []*models.InternalNews) (*models.Data, error) {
-//	var newsSimilar *models.InternalNews
-//	for _, val := range news.Data {
-//		datas, err := FetchSimilarNews(val.UUID)
-//		if err != nil {
-//			return
-//		}
-//	}
-//}
+func NewData(news *models.InternalNews, similarNews *models.InternalNews) ([]*models.Data, error) {
+	list := []*models.Data{}
+
+	for _, val := range similarNews.Data {
+
+		for _, value := range news.Data {
+
+			result := models.Data{
+				Uuid:        value.UUID,
+				Headline:    value.Title,
+				Description: value.Description,
+				Keywords:    value.Keywords,
+				Snippet:     value.Snippet,
+				Url:         value.URL,
+				SimilarNews: models.News{
+					Uuid:     val.UUID,
+					Headline: val.Title,
+					Url:      val.URL,
+				},
+			}
+
+			list = append(list, &result)
+			log.Printf("RESULT: %v", result)
+		}
+	}
+
+	//_, err := db.InsertData(list)
+	//if err != nil {
+	//	return nil, err
+	//}
+
+	return list, nil
+}

@@ -23,36 +23,47 @@ func InitDB() (*gorm.DB, error) {
 	return db, nil
 }
 
-func InsertData(userStat *models.InternalNews, similarNews *models.InternalNews) ([]*models.Data, error) {
+//func InsertData(userStat *models.InternalNews, similarNews *models.InternalNews) ([]*models.Data, error) {
+//	db, err := InitDB()
+//	if err != nil {
+//		log.Printf("Error initializing db: %v", err)
+//		panic(err)
+//	}
+//	list := []*models.Data{}
+//
+//	for _, val := range similarNews.Data {
+//
+//		for _, value := range userStat.Data {
+//
+//			result := models.Data{
+//				Uuid:        value.UUID,
+//				Headline:    value.Title,
+//				Description: value.Description,
+//				Keywords:    value.Keywords,
+//				Snippet:     value.Snippet,
+//				Url:         value.URL,
+//				SimilarNews: models.News{
+//					Uuid:     val.UUID,
+//					Headline: val.Title,
+//					Url:      val.URL,
+//				},
+//			}
+//			db.Create(&result)
+//
+//			list = append(list, &result)
+//			log.Printf("RESULT: %v", result)
+//		}
+//	}
+//	return list, nil
+//}
+
+func InsertData(data []*models.Data) ([]*models.Data, error) {
 	db, err := InitDB()
 	if err != nil {
 		log.Printf("Error initializing db: %v", err)
 		panic(err)
 	}
-	list := []*models.Data{}
+	db.Create(&data)
 
-	for _, val := range similarNews.Data {
-
-		for _, value := range userStat.Data {
-
-			result := models.Data{
-				Uuid:        value.UUID,
-				Headline:    value.Title,
-				Description: value.Description,
-				Keywords:    value.Keywords,
-				Snippet:     value.Snippet,
-				Url:         value.URL,
-				SimilarNews: models.News{
-					Uuid:     val.UUID,
-					Headline: val.Title,
-					Url:      val.URL,
-				},
-			}
-			db.Create(&result)
-
-			list = append(list, &result)
-			log.Printf("RESULT: %v", result)
-		}
-	}
-	return list, nil
+	return data, nil
 }
