@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"net/http"
@@ -13,7 +14,7 @@ func main() {
 
 	conn, err := db.InitDB()
 	if err != nil {
-		/// ??? error
+		fmt.Errorf("InitDB failed: %v", err)
 		return
 	}
 

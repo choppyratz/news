@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"news/pkg/models"
 )
@@ -14,23 +13,23 @@ func FetchNews(limit int, categories string, language string) (*models.InternalN
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, models.NewErrorResponse(fmt.Sprintf("GetJwtFromHeader failed: %v", err))
+		return nil, fmt.Errorf("NewRequest failed: %v", err)
 	}
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, models.NewErrorResponse("Couldn't make request: %v", err)
+		return nil, fmt.Errorf("Couldn't make request: %v", err)
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil, models.NewErrorResponse("Couldn't read body: %v", err)
+		return nil, fmt.Errorf("Couldn't read body: %v", err)
 	}
 
 	var userStat models.InternalNews
 	err = json.Unmarshal(body, &userStat)
 	if err != nil {
-		return nil, models.NewErrorResponse("Unmarshal failed: %v", err)
+		return nil, fmt.Errorf("Unmarshal failed: %v", err)
 	}
 
 	return &userStat, nil
@@ -41,58 +40,44 @@ func FetchSimilarNews(uuid string) (*models.InternalNews, error) {
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, models.NewErrorResponse("Couldn't make request: %v", err)
+		return nil, fmt.Errorf("NewRequest failed: %v", err)
 	}
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, models.NewErrorResponse("Couldn't make request: %v", err)
+		return nil, fmt.Errorf("Make NewRequest failed: %v", err)
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil, models.NewErrorResponse("Couldn't read body: %v", err)
+		return nil, fmt.Errorf("Read body failed: %v", err)
 	}
 
 	var userStat models.InternalNews
 	err = json.Unmarshal(body, &userStat)
 	if err != nil {
-		return nil, models.NewErrorResponse("Unmarshal failed: %v", err)
-
+		return nil, fmt.Errorf("Json unmarshal failed: %v", err)
 	}
 	return &userStat, nil
 }
 
-func NewData(news *models.InternalNews, similarNews *models.InternalNews) ([]*models.Data, error) {
+func NewData(news *models.InternalNews) []*models.Data {
 	list := []*models.Data{}
 
-	for _, val := range similarNews.Data {
+	for _, value := range news.Data {
 
-		for _, value := range news.Data {
-
-			result := models.Data{
-				Uuid:        value.UUID,
-				Headline:    value.Title,
-				Description: value.Description,
-				Keywords:    value.Keywords,
-				Snippet:     value.Snippet,
-				Url:         value.URL,
-				SimilarNews: models.News{
-					Uuid:     val.UUID,
-					Headline: val.Title,
-					Url:      val.URL,
-				},
-			}
-
-			list = append(list, &result)
-			log.Printf("RESULT: %v", result)
+		result := models.Data{
+			Uuid:        value.UUID,
+			Headline:    value.Title,
+			Description: value.Description,
+			Keywords:    value.Keywords,
+			Snippet:     value.Snippet,
+			Url:         value.URL,
 		}
+
+		list = append(list, &result)
+		//log.Printf("RESULT: %v", result)
 	}
 
-	//_, err := db.InsertData(list)
-	//if err != nil {
-	//	return nil, err
-	//}
-
-	return list, nil
+	return list
 }

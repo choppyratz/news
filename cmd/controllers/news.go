@@ -18,57 +18,44 @@ func News(w http.ResponseWriter, r *http.Request) {
 	limit := r.FormValue("limit")
 
 	l, err := strconv.Atoi(limit)
-	if l < 1 && l > 10 {
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "Limit error"})
+	if err != nil {
+		models.Error(w, 400, "Couldn't transform string to int")
 		return
 	}
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "Couldn't transform string to int"})
+	if l < 1 && l > 10 {
+		models.Error(w, 400, "Limit error")
 		return
 	}
 
 	news, err := apiNews.FetchNews(l, categories, language)
 	if err != nil {
-		//models.Error(w,"aaa") ???
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "FetchNews failed"})
+		models.Error(w, 400, "FetchNews failed")
 		return
 	}
 
-	var similarNews *models.InternalNews
-	for _, val := range news.Data {
-		similarNews, err = apiNews.FetchSimilarNews(val.UUID)
+	data := apiNews.NewData(news)
+	for _, val := range data {
+		similarNews, err := apiNews.FetchSimilarNews(val.Uuid)
 		if err != nil {
+			models.Error(w, 400, "FetchSimilarNews failed")
 			return
 		}
+		val.SimilarNews = apiNews.NewData(similarNews)
 	}
 
-	convertData, err := apiNews.NewData(news, similarNews)
+	list, err := db.InsertData(data)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "InsertData failed"})
-		return
-	}
-
-	list, err := db.InsertData(convertData)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "InsertData failed"})
+		models.Error(w, 400, "InsertData failed")
 		return
 	}
 
 	j, err := json.Marshal(list)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(models.ErrorResponse{Message: "JSON Marshal failed"})
+		models.Error(w, 400, "Json Marshalling failed")
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	//w.Write([]byte(fmt.Sprintf("apiNews:%s", json)))
 	w.Write(j)
 
 }

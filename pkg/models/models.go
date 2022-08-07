@@ -3,13 +3,13 @@ package models
 import "time"
 
 type Data struct {
-	Uuid        string `json:"uuid,omitempty"`
-	Headline    string `json:"headline,omitempty"`
-	Description string `json:"description,omitempty"`
-	Keywords    string `json:"keywords,omitempty"`
-	Snippet     string `json:"snippet,omitempty"`
-	Url         string `json:"url,omitempty"`
-	SimilarNews News
+	Uuid        string  `json:"uuid,omitempty"`
+	Headline    string  `json:"headline,omitempty"`
+	Description string  `json:"description,omitempty"`
+	Keywords    string  `json:"keywords,omitempty"`
+	Snippet     string  `json:"snippet,omitempty"`
+	Url         string  `json:"url,omitempty"`
+	SimilarNews []*Data `json:"similarNews,omitempty"`
 }
 
 type News struct {
