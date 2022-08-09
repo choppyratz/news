@@ -1,0 +1,47 @@
+# github.com/DavidHuie/gomigrate v0.0.0-20190826182718-4adc4b3de142
+## explicit
+# github.com/go-chi/chi/v5 v5.0.7
+## explicit; go 1.14
+github.com/go-chi/chi/v5
+github.com/go-chi/chi/v5/middleware
+# github.com/go-resty/resty/v2 v2.7.0
+## explicit; go 1.11
+github.com/go-resty/resty/v2
+# github.com/go-sql-driver/mysql v1.6.0
+## explicit; go 1.10
+github.com/go-sql-driver/mysql
+# github.com/golang-migrate/migrate v3.5.4+incompatible
+## explicit
+# github.com/golang-migrate/migrate/v4 v4.15.2
+## explicit; go 1.16
+# github.com/hashicorp/errwrap v1.1.0
+## explicit
+# github.com/hashicorp/go-multierror v1.1.1
+## explicit; go 1.13
+# github.com/jinzhu/inflection v1.0.0
+## explicit
+github.com/jinzhu/inflection
+# github.com/jinzhu/now v1.1.5
+## explicit; go 1.12
+github.com/jinzhu/now
+# github.com/lib/pq v1.10.6
+## explicit; go 1.13
+# github.com/mattn/go-sqlite3 v1.14.14
+## explicit; go 1.12
+# go.uber.org/atomic v1.7.0
+## explicit; go 1.13
+# golang.org/x/net v0.0.0-20220225172249-27dd8689420f
+## explicit; go 1.17
+golang.org/x/net/publicsuffix
+# gorm.io/driver/mysql v1.3.5
+## explicit; go 1.14
+gorm.io/driver/mysql
+# gorm.io/gorm v1.23.8
+## explicit; go 1.14
+gorm.io/gorm
+gorm.io/gorm/callbacks
+gorm.io/gorm/clause
+gorm.io/gorm/logger
+gorm.io/gorm/migrator
+gorm.io/gorm/schema
+gorm.io/gorm/utils

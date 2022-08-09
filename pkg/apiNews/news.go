@@ -9,7 +9,7 @@ import (
 )
 
 func FetchNews(limit int, categories string, language string) (*models.InternalNews, error) {
-	url := fmt.Sprintf("https://api.thenewsapi.com/v1/news/top?api_token=HPDKewpVbNrxkUNIwqWfdvhP6jig8HD3IzBBjVmi&locale=us&limit=%v&categories=%v&language=%v", limit, categories, language)
+	url := fmt.Sprintf("https://api.thenewsapi.com/v1/news/top?api_token=AIn0bKJUFg2sFBbTroAx8jzgd8Sm7MxywIuNmEtQ&locale=us&limit=%v&categories=%v&language=%v", limit, categories, language)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -36,7 +36,7 @@ func FetchNews(limit int, categories string, language string) (*models.InternalN
 }
 
 func FetchSimilarNews(uuid string) (*models.InternalNews, error) {
-	url := fmt.Sprintf("https://api.thenewsapi.com/v1/news/similar/%v?api_token=HPDKewpVbNrxkUNIwqWfdvhP6jig8HD3IzBBjVmi", uuid)
+	url := fmt.Sprintf("https://api.thenewsapi.com/v1/news/similar/%v?api_token=AIn0bKJUFg2sFBbTroAx8jzgd8Sm7MxywIuNmEtQ", uuid)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
