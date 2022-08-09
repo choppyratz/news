@@ -6,38 +6,20 @@ services:
       dockerfile: ./Dockerfile
     image: news_app
     platform: linux/amd64
-#    env_file:
-#      - ./.env
-#    depends_on:
-#      - postgres
-#      - migration
+    depends_on:
+      - mysql
     ports:
-      - "9999:9999"
-#  news:
-#    container_name: "test_api"
-#    build:
-#      context: .
-#      dockerfile: ./Dockerfile
-#    ports:
-#      - "9993:9993"
-##    depends_on:
-##      - mysql
-#    volumes:
-#      - .:/app/
-#  mysql:
-#    image: mysql:5.7
-#    restart: always
-#    environment:
-#      MYSQL_RANDOM_ROOT_PASSWORD: "secret"
-#      MYSQL_DATABASE: "test"
-#      MYSQL_USER: "tester"
-#      MYSQL_PASSWORD: "secret"
-##      MYSQL_DATABASE: 'db'
-##      MYSQL_USER: 'user'
-##      MYSQL_PASSWORD: 'password'
-##      MYSQL_ROOT_PASSWORD: 'password'
-#    ports:
-#      - '3306:3306'
-#    expose:
-#      - '3306'
+      - "9993:9993"
+  mysql:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "secret"
+      MYSQL_DATABASE: "test"
+      MYSQL_USER: "tester"
+      MYSQL_PASSWORD: "secret"
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
 

@@ -8,29 +8,29 @@ import (
 )
 
 var (
-	url = "http://localhost:9993"
+	url        = "http://localhost:9993"
+	categories = "tech"
+	limit      = "3"
+	language   = "en"
 )
 
 func TestNews(t *testing.T) {
 	t.Parallel()
 
-	_, err := News()
+	_, err := News(categories, limit, language)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 }
 
-func News() ([]*models.Data, error) {
+func News(categories string, limit string, language string) ([]*models.Data, error) {
 	output := []*models.Data{}
 
-	url := fmt.Sprintf("%v/news", url)
+	url := fmt.Sprintf("%v/news?categories=%v&limit=%v&language=%v", url, categories, limit, language)
 
 	resp, err := resty.New().R().
 		SetHeader("Content-Type", "application/json").
-		SetPathParam("categories", "tech").
-		SetPathParam("language", "en").
-		SetPathParam("limit", "3").
 		SetResult(&output).
 		Post(url)
 	if err != nil {

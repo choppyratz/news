@@ -12,9 +12,7 @@ import (
 func News(w http.ResponseWriter, r *http.Request) {
 	categories := r.FormValue("categories")
 	language := r.FormValue("language")
-	if language != "en" {
 
-	}
 	limit := r.FormValue("limit")
 
 	l, err := strconv.Atoi(limit)

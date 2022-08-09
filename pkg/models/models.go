@@ -9,7 +9,7 @@ type Data struct {
 	Keywords    string  `json:"keywords,omitempty"`
 	Snippet     string  `json:"snippet,omitempty"`
 	Url         string  `json:"url,omitempty"`
-	SimilarNews []*Data `json:"similarNews,omitempty"`
+	SimilarNews []*Data `json:"similarNews,omitempty"gorm:"-"`
 }
 
 type News struct {

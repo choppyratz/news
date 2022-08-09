@@ -18,7 +18,7 @@ func main() {
 		return
 	}
 
-	conn.AutoMigrate(&models.News{})
+	conn.AutoMigrate(&models.Data{})
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
