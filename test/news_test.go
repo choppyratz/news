@@ -27,7 +27,7 @@ func TestNews(t *testing.T) {
 func News(categories string, limit string, language string) ([]*models.Data, error) {
 	output := []*models.Data{}
 
-	url := fmt.Sprintf("%v/news?categories=%v&limit=%v&language=%v", url, categories, limit, language)
+	url := fmt.Sprintf("%s/news?categories=%s&limit=%s&language=%s", url, categories, limit, language)
 
 	resp, err := resty.New().R().
 		SetHeader("Content-Type", "application/json").

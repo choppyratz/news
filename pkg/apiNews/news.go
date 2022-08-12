@@ -8,55 +8,59 @@ import (
 	"news/pkg/models"
 )
 
+var (
+	apiToken = "AIn0bKJUFg2sFBbTroAx8jzgd8Sm7MxywIuNmEtQ"
+)
+
 func FetchNews(limit int, categories string, language string) (*models.InternalNews, error) {
-	url := fmt.Sprintf("https://api.thenewsapi.com/v1/news/top?api_token=AIn0bKJUFg2sFBbTroAx8jzgd8Sm7MxywIuNmEtQ&locale=us&limit=%v&categories=%v&language=%v", limit, categories, language)
+	url := fmt.Sprintf("https://api.thenewsapi.com/v1/news/top?api_token=%s&locale=us&limit=%d&categories=%s&language=%s", apiToken, limit, categories, language)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("NewRequest failed: %v", err)
+		return nil, fmt.Errorf("NewRequest failed: %w", err)
 	}
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("Couldn't make request: %v", err)
+		return nil, fmt.Errorf("Couldn't make request: %w", err)
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil, fmt.Errorf("Couldn't read body: %v", err)
+		return nil, fmt.Errorf("Couldn't read body: %w", err)
 	}
 
 	var userStat models.InternalNews
 	err = json.Unmarshal(body, &userStat)
 	if err != nil {
-		return nil, fmt.Errorf("Unmarshal failed: %v", err)
+		return nil, fmt.Errorf("Unmarshal failed: %w", err)
 	}
 
 	return &userStat, nil
 }
 
 func FetchSimilarNews(uuid string) (*models.InternalNews, error) {
-	url := fmt.Sprintf("https://api.thenewsapi.com/v1/news/similar/%v?api_token=AIn0bKJUFg2sFBbTroAx8jzgd8Sm7MxywIuNmEtQ", uuid)
+	url := fmt.Sprintf("https://api.thenewsapi.com/v1/news/similar/%s?api_token=%s", uuid, apiToken)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("NewRequest failed: %v", err)
+		return nil, fmt.Errorf("NewRequest failed: %w", err)
 	}
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("Make NewRequest failed: %v", err)
+		return nil, fmt.Errorf("Make NewRequest failed: %w", err)
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil, fmt.Errorf("Read body failed: %v", err)
+		return nil, fmt.Errorf("Read body failed: %w", err)
 	}
 
 	var userStat models.InternalNews
 	err = json.Unmarshal(body, &userStat)
 	if err != nil {
-		return nil, fmt.Errorf("Json unmarshal failed: %v", err)
+		return nil, fmt.Errorf("Json unmarshal failed: %w", err)
 	}
 	return &userStat, nil
 }
@@ -76,7 +80,6 @@ func NewData(news *models.InternalNews) []*models.Data {
 		}
 
 		list = append(list, &result)
-		//log.Printf("RESULT: %v", result)
 	}
 
 	return list

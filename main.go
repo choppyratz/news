@@ -15,14 +15,23 @@ func main() {
 	conn, err := db.InitDB()
 	if err != nil {
 		fmt.Errorf("InitDB failed: %v", err)
+		/// что здесь не так с обработкой ошибки
 		return
 	}
 
-	conn.AutoMigrate(&models.Data{})
+	err = conn.AutoMigrate(&models.Data{})
+	if err != nil {
+		fmt.Errorf("AutoMigrate failed: %v", err)
+		return
+	}
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Post("/news", controllers.News)
 
-	http.ListenAndServe(":9993", r)
+	err = http.ListenAndServe(":9993", r)
+	if err != nil {
+		fmt.Errorf("ListenAndServe failed: %v", err)
+		return
+	}
 }

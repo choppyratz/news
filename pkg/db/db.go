@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -9,9 +10,16 @@ import (
 
 var db *gorm.DB
 
+const (
+	host   = "127.0.0.1"
+	port   = 3306
+	user   = "root"
+	dbname = "mysql"
+)
+
 func InitDB() (*gorm.DB, error) {
 	if db == nil {
-		dsn := "root:@tcp(127.0.0.1:3306)/mysql?charset=utf8mb4&parseTime=True&loc=Local"
+		dsn := fmt.Sprintf("%s:@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, host, port, dbname)
 		d, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 		if err != nil {
 			return nil, err
