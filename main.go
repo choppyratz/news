@@ -15,11 +15,10 @@ func main() {
 	conn, err := db.InitDB()
 	if err != nil {
 		fmt.Errorf("InitDB failed: %v", err)
-		/// что здесь не так с обработкой ошибки
 		return
 	}
 
-	err = conn.AutoMigrate(&models.Data{})
+	err = conn.AutoMigrate(&models.MainData{})
 	if err != nil {
 		fmt.Errorf("AutoMigrate failed: %v", err)
 		return

@@ -29,7 +29,7 @@ func InitDB() (*gorm.DB, error) {
 	return db, nil
 }
 
-func InsertData(data []*models.Data) ([]*models.Data, error) {
+func InsertData(data []*models.MainData) ([]*models.MainData, error) {
 	db, err := InitDB()
 	if err != nil {
 		return nil, err

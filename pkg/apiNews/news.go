@@ -65,12 +65,14 @@ func FetchSimilarNews(uuid string) (*models.InternalNews, error) {
 	return &userStat, nil
 }
 
-func NewData(news *models.InternalNews) []*models.Data {
-	list := []*models.Data{}
+func NewData(news *models.InternalNews) []*models.MainData {
+	//list := []*models.MainData{}
+
+	list := make([]*models.MainData, 7)
 
 	for _, value := range news.Data {
 
-		result := models.Data{
+		result := models.MainData{
 			Uuid:        value.UUID,
 			Headline:    value.Title,
 			Description: value.Description,
