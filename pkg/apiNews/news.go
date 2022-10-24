@@ -65,10 +65,8 @@ func FetchSimilarNews(uuid string) (*models.InternalNews, error) {
 	return &userStat, nil
 }
 
-func NewData(news *models.InternalNews) []*models.MainData {
-	//list := []*models.MainData{}
-
-	list := make([]*models.MainData, 7)
+func NewData(news *models.InternalNews) ([]*models.MainData, error) {
+	list := make([]*models.MainData, 0, 7)
 
 	for _, value := range news.Data {
 
@@ -84,5 +82,5 @@ func NewData(news *models.InternalNews) []*models.MainData {
 		list = append(list, &result)
 	}
 
-	return list
+	return list, nil
 }

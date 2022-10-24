@@ -30,15 +30,24 @@ func News(w http.ResponseWriter, r *http.Request) {
 		models.Error(w, 400, "FetchNews failed")
 		return
 	}
+	//log.Printf("News: %v", news)
 
-	data := apiNews.NewData(news)
+	data, err := apiNews.NewData(news)
+	if err != nil {
+		models.Error(w, 500, "NewData failed")
+		return
+	}
+
 	for _, val := range data {
 		similarNews, err := apiNews.FetchSimilarNews(val.Uuid)
 		if err != nil {
 			models.Error(w, 400, "FetchSimilarNews failed")
 			return
 		}
-		val.SimilarNews = apiNews.NewData(similarNews)
+		val.SimilarNews, err = apiNews.NewData(similarNews)
+		if err != nil {
+			models.Error(w, 400, "NewData failed")
+		}
 	}
 
 	list, err := db.InsertData(data)
@@ -47,13 +56,13 @@ func News(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	j, err := json.Marshal(list)
+	_, err = json.Marshal(list)
 	if err != nil {
 		models.Error(w, 400, "Json Marshalling failed")
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(j)
+	//w.Write(j)
 
 }

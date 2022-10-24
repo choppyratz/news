@@ -3,12 +3,13 @@ package test
 import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
+	"log"
 	"news/pkg/models"
 	"testing"
 )
 
 var (
-	url        = "http://localhost:9993"
+	url1       = "http://localhost:9993"
 	categories = "tech"
 	limit      = "3"
 	language   = "en"
@@ -27,7 +28,14 @@ func TestNews(t *testing.T) {
 func News(categories string, limit string, language string) ([]*models.Data, error) {
 	output := []*models.Data{}
 
-	url := fmt.Sprintf("%s/news?categories=%s&limit=%s&language=%s", url, categories, limit, language)
+	url := fmt.Sprintf("%s/news?categories=%s&limit=%s&language=%s", url1, categories, limit, language)
+
+	//url, err := url.Parse(fmt.Sprintf("%s/news?categories=%s&limit=%s&language=%s", url1, categories, limit, language))
+	//if err != nil {
+	//	return nil, err
+	//}
+
+	log.Printf("URL PATH: %s", url)
 
 	resp, err := resty.New().R().
 		SetHeader("Content-Type", "application/json").
