@@ -3,7 +3,6 @@ package test
 import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"log"
 	"news/pkg/models"
 	"testing"
 )
@@ -30,13 +29,6 @@ func News(categories string, limit string, language string) ([]*models.Data, err
 
 	url := fmt.Sprintf("%s/news?categories=%s&limit=%s&language=%s", url1, categories, limit, language)
 
-	//url, err := url.Parse(fmt.Sprintf("%s/news?categories=%s&limit=%s&language=%s", url1, categories, limit, language))
-	//if err != nil {
-	//	return nil, err
-	//}
-
-	log.Printf("URL PATH: %s", url)
-
 	resp, err := resty.New().R().
 		SetHeader("Content-Type", "application/json").
 		SetResult(&output).
@@ -47,6 +39,7 @@ func News(categories string, limit string, language string) ([]*models.Data, err
 	if resp.StatusCode() != 200 {
 		return nil, fmt.Errorf("status code wrong. status: %v. body: %v", resp.StatusCode(), resp.String())
 	}
+
 	return output, nil
 
 }

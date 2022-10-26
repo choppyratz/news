@@ -28,6 +28,8 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Post("/news", controllers.News)
 
+	r.Post("/", controllers.MyName)
+
 	err = http.ListenAndServe(":9993", r)
 	if err != nil {
 		fmt.Errorf("ListenAndServe failed: %v", err)
