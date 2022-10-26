@@ -7,6 +7,7 @@ import (
 	"news/pkg/apiNews"
 	"news/pkg/db"
 	"news/pkg/models"
+	"sync"
 	"time"
 )
 
@@ -39,19 +40,24 @@ func News(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, val := range data {
-		t2 := time.Now()
-		similarNews, err := apiNews.FetchSimilarNews(val.Uuid)
-		fmt.Printf("Elapsed time FetchSimilarNews(): %v \n", time.Since(t2))
-		if err != nil {
-			models.Error(w, 400, "fetchSimilarNews failed")
-			return
-		}
+	var wg sync.WaitGroup
 
-		val.SimilarNews, err = apiNews.NewData(similarNews)
-		if err != nil {
-			models.Error(w, 400, "newData failed")
-		}
+	for _, val := range data {
+		wg.Add(1)
+		go func() {
+			similarNews, err := apiNews.FetchSimilarNews(val.Uuid)
+			if err != nil {
+				models.Error(w, 400, "fetchSimilarNews failed")
+				return
+			}
+
+			val.SimilarNews, err = apiNews.NewData(similarNews)
+			if err != nil {
+				models.Error(w, 400, "newData failed")
+			}
+		}()
+		wg.Wait()
+
 	}
 
 	list, err := db.InsertData(data)
