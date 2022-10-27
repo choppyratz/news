@@ -40,8 +40,9 @@ func News(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var wg sync.WaitGroup
+
 	for _, val := range data {
-		var wg sync.WaitGroup
 		wg.Add(1)
 
 		go func() {
