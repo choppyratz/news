@@ -40,10 +40,10 @@ func News(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var wg sync.WaitGroup
-
 	for _, val := range data {
+		var wg sync.WaitGroup
 		wg.Add(1)
+
 		go func() {
 			similarNews, err := apiNews.FetchSimilarNews(val.Uuid)
 			if err != nil {
@@ -55,9 +55,9 @@ func News(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				models.Error(w, 400, "newData failed")
 			}
+			defer wg.Done()
 		}()
 		wg.Wait()
-
 	}
 
 	list, err := db.InsertData(data)
