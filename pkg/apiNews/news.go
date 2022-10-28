@@ -10,12 +10,12 @@ import (
 	"os"
 )
 
-func FetchNews(limit string, categories string, language string) (*models.InternalNews, error) {
+func FetchNews(p *models.Params) (*models.InternalNews, error) {
 	err := config.GetConfig()
 	if err != nil {
 		return nil, fmt.Errorf(fmt.Sprintf("failed config.GetConfig(): %v,", err))
 	}
-	url := fmt.Sprintf("https://api.thenewsapi.com/v1/news/top?api_token=%s&locale=us&limit=%s&categories=%s&language=%s", os.Getenv("apiToken"), limit, categories, language)
+	url := fmt.Sprintf("https://api.thenewsapi.com/v1/news/top?api_token=%s&locale=us&limit=%d&categories=%s&language=%s", os.Getenv("apiToken"), p.Limit, p.Categories, p.Language)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

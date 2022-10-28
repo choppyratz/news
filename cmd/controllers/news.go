@@ -10,12 +10,15 @@ import (
 )
 
 func News(w http.ResponseWriter, r *http.Request) {
-	categories := r.FormValue("categories")
-	language := r.FormValue("language")
+	var params models.Params
 
-	limit := r.FormValue("limit")
+	err := json.NewDecoder(r.Body).Decode(&params)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
-	news, err := apiNews.FetchNews(limit, categories, language)
+	news, err := apiNews.FetchNews(&params)
 	if err != nil {
 		models.Error(w, 400, "fetchNews failed")
 		return

@@ -38,3 +38,9 @@ type InternalNews struct {
 	Meta Meta   `json:"meta"`
 	Data []Data `json:"data"`
 }
+
+type Params struct {
+	Limit      int
+	Categories string
+	Language   string
+}
