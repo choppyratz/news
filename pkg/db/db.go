@@ -14,7 +14,10 @@ var db *gorm.DB
 
 func InitDB() (*gorm.DB, error) {
 	if db == nil {
-		config.GetConfig()
+		err := config.GetConfig()
+		if err != nil {
+			return nil, fmt.Errorf(fmt.Sprintf("failed config.GetConfig(): %v,", err))
+		}
 
 		host := os.Getenv("Host")
 		user := os.Getenv("User")

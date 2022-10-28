@@ -4,23 +4,28 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"log"
 	"net/http"
 	"news/cmd/controllers"
+	"news/pkg/config"
 	"news/pkg/db"
 	"news/pkg/models"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
 
 	conn, err := db.InitDB()
 	if err != nil {
-		fmt.Errorf("InitDB failed: %v", err)
+		fmt.Printf("InitDB failed: %v", err)
 		return
 	}
 
 	err = conn.AutoMigrate(&models.MainData{})
 	if err != nil {
-		fmt.Errorf("AutoMigrate failed: %v", err)
+		fmt.Printf("AutoMigrate failed: %v", err)
 		return
 	}
 
@@ -28,11 +33,24 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Post("/news", controllers.News)
 
-	r.Post("/", controllers.MyName)
-
-	err = http.ListenAndServe(":9993", r)
+	err = config.GetConfig()
 	if err != nil {
-		fmt.Errorf("ListenAndServe failed: %v", err)
+		fmt.Printf("failed config.GetConfig(): %v,", err)
 		return
 	}
+
+	go func() {
+		err = http.ListenAndServe(os.Getenv("app_Port"), r)
+		if err != nil {
+			fmt.Printf("ListenAndServe failed: %v", err)
+			return
+		}
+	}()
+	log.Print("NewsApp started")
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+
+	log.Print("NewsApp Shutting Down")
 }

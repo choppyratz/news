@@ -5,15 +5,17 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"news/pkg/config"
 	"news/pkg/models"
-)
-
-var (
-	apiToken = "AIn0bKJUFg2sFBbTroAx8jzgd8Sm7MxywIuNmEtQ"
+	"os"
 )
 
 func FetchNews(limit string, categories string, language string) (*models.InternalNews, error) {
-	url := fmt.Sprintf("https://api.thenewsapi.com/v1/news/top?api_token=%s&locale=us&limit=%s&categories=%s&language=%s", apiToken, limit, categories, language)
+	err := config.GetConfig()
+	if err != nil {
+		return nil, fmt.Errorf(fmt.Sprintf("failed config.GetConfig(): %v,", err))
+	}
+	url := fmt.Sprintf("https://api.thenewsapi.com/v1/news/top?api_token=%s&locale=us&limit=%s&categories=%s&language=%s", os.Getenv("apiToken"), limit, categories, language)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -40,7 +42,11 @@ func FetchNews(limit string, categories string, language string) (*models.Intern
 }
 
 func FetchSimilarNews(uuid string) (*models.InternalNews, error) {
-	url := fmt.Sprintf("https://api.thenewsapi.com/v1/news/similar/%s?api_token=%s", uuid, apiToken)
+	err := config.GetConfig()
+	if err != nil {
+		return nil, fmt.Errorf(fmt.Sprintf("failed config.GetConfig(): %v,", err))
+	}
+	url := fmt.Sprintf("https://api.thenewsapi.com/v1/news/similar/%s?api_token=%s", uuid, os.Getenv("apiToken"))
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

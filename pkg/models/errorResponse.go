@@ -16,5 +16,9 @@ func NewErrorResponse(message string, args ...interface{}) *ErrorResponse {
 
 func Error(w http.ResponseWriter, statusCode int, message string) {
 	w.WriteHeader(statusCode)
-	json.NewEncoder(w).Encode(ErrorResponse{Message: message})
+	err := json.NewEncoder(w).Encode(ErrorResponse{Message: message})
+	if err != nil {
+		fmt.Printf("failed encode: %v", err)
+	}
+
 }

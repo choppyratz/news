@@ -9,7 +9,7 @@ type MainData struct {
 	Keywords    string      `json:"keywords,omitempty"`
 	Snippet     string      `json:"snippet,omitempty"`
 	Url         string      `json:"url,omitempty"`
-	SimilarNews []*MainData `json:"similarNews,omitempty"gorm:"-"`
+	SimilarNews []*MainData `json:"similarNews,omitempty" gorm:"-"`
 }
 
 type Meta struct {

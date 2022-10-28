@@ -2,21 +2,12 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"news/pkg/apiNews"
 	"news/pkg/db"
 	"news/pkg/models"
 	"sync"
-	"time"
 )
-
-func MyName(w http.ResponseWriter, r *http.Request) {
-	myName := "Anton"
-	fmt.Printf("Address: %v \n", &myName) /// выведет адрес памяти
-
-	fmt.Printf("My Name: %s \n", myName)
-}
 
 func News(w http.ResponseWriter, r *http.Request) {
 	categories := r.FormValue("categories")
@@ -24,17 +15,13 @@ func News(w http.ResponseWriter, r *http.Request) {
 
 	limit := r.FormValue("limit")
 
-	t0 := time.Now()
 	news, err := apiNews.FetchNews(limit, categories, language)
-	fmt.Printf("Elapsed time FetchNews(): %v \n", time.Since(t0))
 	if err != nil {
 		models.Error(w, 400, "fetchNews failed")
 		return
 	}
 
-	t1 := time.Now()
 	data, err := apiNews.NewData(news)
-	fmt.Printf("Elapsed time NewData(): %v \n", time.Since(t1))
 	if err != nil {
 		models.Error(w, 500, "newData failed")
 		return
@@ -45,21 +32,22 @@ func News(w http.ResponseWriter, r *http.Request) {
 	for _, val := range data {
 		wg.Add(1)
 
+		value := val
 		go func() {
-			similarNews, err := apiNews.FetchSimilarNews(val.Uuid)
+			similarNews, err := apiNews.FetchSimilarNews(value.Uuid)
 			if err != nil {
 				models.Error(w, 400, "fetchSimilarNews failed")
 				return
 			}
 
-			val.SimilarNews, err = apiNews.NewData(similarNews)
+			value.SimilarNews, err = apiNews.NewData(similarNews)
 			if err != nil {
 				models.Error(w, 400, "newData failed")
 			}
 			defer wg.Done()
 		}()
-		wg.Wait()
 	}
+	wg.Wait()
 
 	list, err := db.InsertData(data)
 	if err != nil {
@@ -74,6 +62,10 @@ func News(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(j)
+	_, err = w.Write(j)
+	if err != nil {
+		models.Error(w, 400, "w.Write failed")
+		return
+	}
 
 }
